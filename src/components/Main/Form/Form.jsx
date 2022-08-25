@@ -1,17 +1,20 @@
 import React, { useState } from 'react'
 import { Button, Col, Form, Row } from 'react-bootstrap'
 
+import { categories } from '../../../constants/categories'
 import { useTransaction } from '../../../contexts/TransactionContext'
+import { formatDate } from '../../../utils/utils'
 
 export default function MainForm() {
   const defaultValues = {
     amount: '',
     category: '',
-    type: 'Income',
-    date: new Date().toDateString(),
+    type: 'income',
+    date: formatDate(new Date()),
   }
   const [formData, setFormData] = useState(defaultValues)
   const { addTransaction } = useTransaction()
+  const selectedCategories = categories[formData.type]
 
   function onSubmit(e) {
     e.preventDefault()
@@ -29,8 +32,8 @@ export default function MainForm() {
           <Form.Group className='mt-2'>
             <Form.Label>Type</Form.Label>
             <Form.Select value={formData.type} onChange={e => setFormData({ ...formData, type: e.target.value })}>
-              <option value="Income">Income</option>
-              <option value="Expense">Expense</option>
+              <option value="income">Income</option>
+              <option value="expense">Expense</option>
             </Form.Select>
           </Form.Group>
         </Col>
@@ -39,8 +42,9 @@ export default function MainForm() {
           <Form.Group className='mt-2'>
             <Form.Label>Category</Form.Label>
             <Form.Select value={formData.category} onChange={e => setFormData({ ...formData, category: e.target.value })}>
-              <option value="business">business</option>
-              <option value="salary">salary</option>
+              {selectedCategories.map((c, idx) => (
+                <option value={c.type} key={idx}>{c.type}</option>
+              ))}
             </Form.Select>
           </Form.Group>
         </Col>
@@ -55,7 +59,7 @@ export default function MainForm() {
         <Col xs='6'>
           <Form.Group className='mt-2'>
             <Form.Label>Date</Form.Label>
-            <Form.Control value={formData.date} onChange={e => setFormData({ ...formData, date: e.target.value })} type='date' />
+            <Form.Control value={formData.date} onChange={e => setFormData({ ...formData, date: formatDate(e.target.value) })} type='date' />
           </Form.Group>
         </Col>
 

@@ -7,13 +7,13 @@ function App() {
   return (
     <Container fluid style={{ height: '100vh' }}>
       <Row className='m-0 h-100 justify-content-center align-items-center'>
-        <Col sm='4'>
+        <Col sm='4' xl='3'>
           <Details title='income' />
         </Col>
-        <Col sm='4'>
+        <Col sm='4' xl='3'>
           <Main />
         </Col>
-        <Col sm='4'>
+        <Col sm='4' xl='3'>
           <Details title='expense' />
         </Col>
       </Row>
