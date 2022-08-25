@@ -1,7 +1,8 @@
 import React from 'react'
-import { Card } from 'react-bootstrap'
+import { Card, Col, Row } from 'react-bootstrap'
 
 import MainForm from './Form/Form'
+import List from './List/List'
 
 export default function Main() {
   return (
@@ -17,6 +18,13 @@ export default function Main() {
         </span>
         <hr />
         <MainForm />
+      </Card.Body>
+      <Card.Body>
+        <Row className='m-0'>
+          <Col xs='12'>
+            <List />
+          </Col>
+        </Row>
       </Card.Body>
     </Card>
   )
