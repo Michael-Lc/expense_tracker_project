@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { SpeechProvider } from '@speechly/react-client';
 
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -9,9 +10,11 @@ import Providers from './contexts';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Providers>
-      <App />
-    </Providers>
+    <SpeechProvider appId='6965eb70-6baf-4aaf-a927-a0a373889412' language='en'>
+      <Providers>
+        <App />
+      </Providers>
+    </SpeechProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Col, Form, Row } from 'react-bootstrap'
+import { useSpeechContext } from '@speechly/react-client'
 
 import { categories } from '../../../constants/categories'
 import { useTransaction } from '../../../contexts/TransactionContext'
@@ -14,18 +15,33 @@ export default function MainForm() {
   }
   const [formData, setFormData] = useState(defaultValues)
   const { addTransaction } = useTransaction()
+  const { segment } = useSpeechContext()
   const selectedCategories = categories[formData.type]
 
-  function onSubmit(e) {
-    e.preventDefault()
+  function onSubmit() {
     addTransaction(formData)
     setFormData(defaultValues)
   }
 
+  useEffect(() => {
+    if(segment) {
+      if(segment.intent.intent === 'add_expense') {
+        setFormData({ ...formData, type: 'expense' })
+      } else if(segment.intent.intent === 'add_income') {
+        setFormData({ ...formData, type: 'income' })
+      } else if(segment.isFinal && segment.intent.intent === 'create_transaction') {
+        return onSubmit()
+      } else if(segment.isFinal && segment.intent.intent === 'cancel_transaction') {
+        return setFormData(defaultValues)
+      }
+    }
+  }, [segment])
+
   return (
-    <Form onSubmit={onSubmit}>
+    <Form>
       <Row className='m-0'>
         <Col xs='12'>
+          {segment && segment.words.map(w => w.value).join(" ")}
         </Col>
 
         <Col xs='6'>
@@ -66,7 +82,7 @@ export default function MainForm() {
 
         <Col xs='12'>
           <Form.Group className='mt-2'>
-            <Button type='submit' variant='light' className='border-secondary w-100'>Create</Button>
+            <Button type='button' onClick={onSubmit} variant='light' className='border-secondary w-100'>Create</Button>
           </Form.Group>
         </Col>
       </Row>
