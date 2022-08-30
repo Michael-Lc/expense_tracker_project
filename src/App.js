@@ -8,13 +8,13 @@ function App() {
   return (
     <Container fluid style={{ height: '90vh' }}>
       <Row className='m-0 h-100 justify-content-center align-items-center'>
-        <Col sm='4' xl='3'>
+        <Col sm='4' xl='3' className='my-3'>
           <Details title='income' />
         </Col>
-        <Col sm='4' xl='3'>
+        <Col sm='4' xl='3' className='my-3'>
           <Main />
         </Col>
-        <Col sm='4' xl='3'>
+        <Col sm='4' xl='3' className='my-3'>
           <Details title='expense' />
         </Col>
       </Row>

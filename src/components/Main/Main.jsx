@@ -1,10 +1,15 @@
 import React from 'react'
 import { Card, Col, Row } from 'react-bootstrap'
 
+import { useTransaction } from '../../contexts/TransactionContext'
+
 import MainForm from './Form/Form'
+import InfoCard from '../InfoCard'
 import List from './List/List'
 
 export default function Main() {
+  const { balance } = useTransaction()
+
   return (
     <Card className="root">
       <Card.Header>
@@ -12,10 +17,8 @@ export default function Main() {
         <h5 className='fw-normal'>Powered by Speechly</h5>
       </Card.Header>
       <Card.Body>
-        <h5 className='text-center'>Total Balance $100</h5>
-        <span>
-          Try saying: Add income for $100 in Category Salary for Monday
-        </span>
+        <h5 className='text-center'>Total Balance ${balance}</h5>
+        <InfoCard />
         <hr />
         <MainForm />
       </Card.Body>

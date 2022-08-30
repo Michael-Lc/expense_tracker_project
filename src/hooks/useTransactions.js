@@ -10,7 +10,7 @@ export default function useTransactions(type) {
   selectedCategories.forEach(t => {
     const category = categories[type].find(c => c.type === t.category)
     
-    if(category) category.amount +=(parseFloat(t.amount) || 0)
+    if(category) category.amount += (parseFloat(t.amount) || 0)
   })
 
   const filteredCategories = categories[type].filter(c => c.amount > 0)

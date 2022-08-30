@@ -10,6 +10,10 @@ export function useTransaction() {
 export function TransactionProvider({ children }) {
   const [transactions, setTransactions] = useState([])
 
+  const balance = transactions.reduce((acc, curr) => {
+    return (curr.type === 'expense' ? acc - (parseFloat(curr.amount) || 0) : acc + (parseFloat(curr.amount) || 0))
+  }, 0)
+
   function addTransaction(transaction) {
     setTransactions([ { id: uuidv4(), ...transaction }, ...transactions ])
   }
@@ -21,6 +25,7 @@ export function TransactionProvider({ children }) {
 
   const value = {
     transactions,
+    balance,
     addTransaction,
     deleteTransaction,
   }

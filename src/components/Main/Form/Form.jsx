@@ -19,6 +19,7 @@ export default function MainForm() {
   const selectedCategories = categories[formData.type]
 
   function onSubmit() {
+    if(Number.isNaN(Number(formData.amount)) || !formData.date.includes("-")) return
     addTransaction(formData)
     setFormData(defaultValues)
   }
@@ -33,6 +34,31 @@ export default function MainForm() {
         return onSubmit()
       } else if(segment.isFinal && segment.intent.intent === 'cancel_transaction') {
         return setFormData(defaultValues)
+      }
+
+      segment.entities.forEach((e) => {
+        const category = `${e.value.charAt(0)}${e.value.slice(1).toLowerCase()}`
+        switch(e.type) {
+          case 'amount':
+            setFormData({ ...formData, amount: e.value })
+            break
+          case 'category':
+            if(categories.income.map((ic) => ic.type).includes(category)) {
+              setFormData({ ...formData, type: 'income', category })
+            } else if(categories.expense.map((ec) => ec.type).includes(category)) {
+              setFormData({ ...formData, type: 'expense', category })
+            }
+            break
+          case 'date':
+            setFormData({ ...formData, date: e.value })
+            break
+          default:
+            break
+        }
+      })
+
+      if(segment.isFinal && Object.keys(formData).every(k => formData[k])) {
+        onSubmit()
       }
     }
   }, [segment])
