@@ -6,7 +6,7 @@ import { Col, Container, Row } from 'react-bootstrap'
 import Details from "./components/Details/Details";
 import Main from './components/Main/Main';
 
-function App() {
+export default function Home() {
   const { speechState } = useSpeechContext()
   const main = useRef(null)
 
@@ -38,5 +38,3 @@ function App() {
     </Container>
   );
 }
-
-export default App;
