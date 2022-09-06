@@ -1,12 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-// import * as yup from 'yup'
 
-import { app } from '../config'
-
-// import YupPassword from 'yup-password'
-// YupPassword(yup)
+import { auth } from '../firebase'
 
 
 const AuthContext = createContext()
@@ -17,13 +12,24 @@ export function useAuth() {
 
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null)
+  const [currentUser, setCurrentUser] = useState(null)
   const [loading, setLoading] = useState(false)
   const [initialLoading, setInitialLoading] = useState(true)
   const navigate = useNavigate()
 
+  function signup(body) {
+    auth.createUserWithEmailAndPassword(body.email, body.password)
+  }
+
+  useEffect(() => {
+    const unSubscribe = auth.onAuthStateChanged(user => {
+      setCurrentUser(user)
+    })
+    return unSubscribe
+  }, [])
+
   const value = {
-    user,
+    currentUser,
     loading,
   }
 
