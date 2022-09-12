@@ -1,8 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
-import { auth } from '../firebase'
-
+import { auth, firestore } from '../firebase'
 
 const AuthContext = createContext()
 
@@ -10,15 +8,30 @@ export function useAuth() {
   return useContext(AuthContext)
 }
 
-
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null)
-  const [loading, setLoading] = useState(false)
   const [initialLoading, setInitialLoading] = useState(true)
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
 
-  function signup(body) {
-    auth.createUserWithEmailAndPassword(body.email, body.password)
+  async function signup(body) {
+    try {
+      const user = await auth.createUserWithEmailAndPassword(body.email, body.password)
+      const newUser = firestore.collection("users").doc(user.user.uid);
+      try {
+        await newUser.set({
+          id: user.user.uid,
+          name: body.name,
+          email: body.email,
+        })
+        return true
+      } catch (err) {
+        console.log(err.message)
+        return false
+      }
+    } catch (err) {
+      console.log(err.message)
+      return false
+    } 
   }
 
   useEffect(() => {
@@ -30,7 +43,7 @@ export function AuthProvider({ children }) {
 
   const value = {
     currentUser,
-    loading,
+    signup
   }
 
   useEffect(() => {

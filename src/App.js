@@ -1,41 +1,26 @@
-import { useEffect, useRef } from 'react';
-import { ErrorPanel, PushToTalkButton, PushToTalkButtonContainer } from '@speechly/react-ui';
-import { SpeechState, useSpeechContext } from '@speechly/react-client'
-import { Col, Container, Row } from 'react-bootstrap'
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import Details from "./components/Details/Details";
-import Main from './components/Main/Main';
+import Providers from './contexts';
+import Home from "./pages/Home";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
+import ForgotPassword from "./pages/ForgotPassword";
+import AccountSettings from "./pages/AccountSettings";
 
 function App() {
-  const { speechState } = useSpeechContext()
-  const main = useRef(null)
-
-  const executeScroll = () => main.current.scrollIntoView();
-
-  useEffect(() => {
-    if(speechState === SpeechState.recording) {
-      executeScroll()
-    }
-  }, [speechState])
 
   return (
-    <Container fluid style={{ height: '90vh' }}>
-      <Row className='m-0 h-100 justify-content-center align-items-center'>
-        <Col sm='4' xl='3' className='my-3'>
-          <Details title='income' />
-        </Col>
-        <Col sm='4' xl='3' className='my-3' ref={main}>
-          <Main />
-        </Col>
-        <Col sm='4' xl='3' className='my-3'>
-          <Details title='expense' />
-        </Col>
-      </Row>
-      <PushToTalkButtonContainer>
-        <PushToTalkButton />
-        {/* <ErrorPanel /> */}
-      </PushToTalkButtonContainer>
-    </Container>
+    <Router>
+      <Providers>
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/signup' element={<SignUp />} />
+          <Route path='/signin' element={<SignIn />} />
+          <Route path='/forgot-password' element={<ForgotPassword />} />
+          <Route path='/account-settings' element={<AccountSettings />} />
+        </Routes>
+      </Providers>
+    </Router>
   );
 }
 

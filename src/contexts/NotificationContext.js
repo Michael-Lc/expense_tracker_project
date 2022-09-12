@@ -1,8 +1,8 @@
 import { createContext, useContext, useState } from "react";
 import { ToastContainer } from "react-bootstrap";
 
-import Dialog from "../components/notifications/Dialog";
-import Notification from "../components/notifications/Notification";
+// import Dialog from "../components/Notification/Dialog";
+import Notification from "../components/Notification/Notification";
 
 const NotificationContext = createContext()
 
@@ -39,7 +39,7 @@ export function NotificationProvider({ children }) {
   return (
     <NotificationContext.Provider value={value}>
       {children}
-      {dialog && <Dialog message={dialog.message} type={dialog.type} />}
+      {/* {dialog && <Dialog message={dialog.message} type={dialog.type} />} */}
       <ToastContainer className='notifications-container'>
         {notifications.map((n, idx) => <Notification key={idx} type={n.type} message={n.message} id={idx} />)}
       </ToastContainer>

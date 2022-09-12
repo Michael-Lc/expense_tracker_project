@@ -3,8 +3,8 @@ import { ErrorPanel, PushToTalkButton, PushToTalkButtonContainer } from '@speech
 import { SpeechState, useSpeechContext } from '@speechly/react-client'
 import { Col, Container, Row } from 'react-bootstrap'
 
-import Details from "./components/Details/Details";
-import Main from './components/Main/Main';
+import Details from "../components/Details/Details";
+import Main from '../components/Main/Main';
 
 export default function Home() {
   const { speechState } = useSpeechContext()
@@ -19,7 +19,7 @@ export default function Home() {
   }, [speechState])
 
   return (
-    <Container fluid style={{ height: '90vh' }}>
+    <Container className='home' fluid style={{ height: '90vh' }}>
       <Row className='m-0 h-100 justify-content-center align-items-center'>
         <Col sm='4' xl='3' className='my-3'>
           <Details title='income' />

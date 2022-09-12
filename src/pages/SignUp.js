@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Alert, Button, Card, Container, Form } from 'react-bootstrap'
-import { useForm } from 'react-hooks-form'
+import { Link, useNavigate } from 'react-router-dom'
+import { Alert, Card, Container, Form } from 'react-bootstrap'
+import { useForm } from 'react-hook-form'
+
+import { useAuth } from '../contexts/AuthContext'
+import SubmitButton from '../components/custom-buttons/SubmitButton'
 
 export default function SignUp() {
   const defaultValues = {
@@ -10,15 +13,30 @@ export default function SignUp() {
     password: '',
     confirmPassword: '',
   }
+  const navigate = useNavigate()
+  const { signup } = useAuth()
   const [loading, setLoading] = useState(false)
-  const { register, formState: { errors }, handleSubmit } = useForm({
+  const { register, setError, formState: { errors }, handleSubmit } = useForm({
     defaultValues,
     mode: 'all',
     // resolver: yupResolver(signUpSchema),
   });
 
-  function onSubmit(data, e) {
-    console.log(data)
+  async function onSubmit(data, e) {
+    if(data.password !== data.confirmPassword) {
+      return setError("confirmPassword", { type: "focus", message: "Passwords do not match" }, { shouldFocus: true })
+    }
+
+    try {
+      setLoading(true)
+      const res = await signup(data)
+      setLoading(false)
+      navigate('/')
+      console.log(res)
+    } catch(err) {
+      setLoading(false)
+      console.log(err)
+    }
   }
 
   const onError = (errors, e) => console.log(errors, e);
@@ -33,32 +51,33 @@ export default function SignUp() {
           <Card.Body>
             <h2 className="font-weight-normal text-center mb-4">Create An Account</h2>
             <Form role='form' method='post' onSubmit={handleSubmit(onSubmit, onError)}>
-              {/* {error && <Alert variant='danger'>{error}</Alert>} */}
               <Form.Group className='my-2' id="fname">
-                {errors.first_name && <Alert variant='danger'>{errors.first_name.message}</Alert>}
+                {errors.name && <Alert variant='danger'>{errors.name.message}</Alert>}
                 <Form.Label>Name</Form.Label>
-                <Form.Control type="text" {...register('name')}  required />
+                <Form.Control type="text" {...register('name', { required: 'Please fill this field' })} />
               </Form.Group>
               
               <Form.Group className='my-2' id="email">
                 {errors.email && <Alert variant='danger'>{errors.email.message}</Alert>}
                 <Form.Label>Email</Form.Label>
-                <Form.Control type="email" {...register('email')}  required />
+                <Form.Control type="email" {...register('email', { required: 'Please fill this field' })} />
               </Form.Group>
 
               <Form.Group className='my-2' id="password">
                 {errors.password && <Alert variant='danger'>{errors.password.message}</Alert>}
                 <Form.Label>Password</Form.Label>
-                <Form.Control type="password" {...register('password')}  required />
+                <Form.Control type="password" {...register('password', { required: 'Please fill this field', minLength: { value: 6, message: "Password must contain at least 6 characters" } })} />
               </Form.Group>
 
               <Form.Group className='my-2' id="confirmPassword">
                 {errors.confirmPassword && <Alert variant='danger'>{errors.confirmPassword.message}</Alert>}
                 <Form.Label>Confirm Password</Form.Label>
-                <Form.Control type="password" {...register('confirmPassword')}  required />
+                <Form.Control type="password" {...register('confirmPassword', { required: 'Please fill this field' })} />
               </Form.Group>
 
-              <Button disabled={loading} className='w-100 my-3 rounded'>Create Account</Button>
+              <SubmitButton loading={loading} className='w-100 my-3'>
+                Create Account
+              </SubmitButton>
             </Form>
           </Card.Body>
         </Card>

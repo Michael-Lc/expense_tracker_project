@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 // import { Link } from 'react-router-dom'
 import { Alert, Button, Card, Container, Form } from 'react-bootstrap'
-import { useForm } from 'react-hooks-form'
+import { useForm } from 'react-hook-form'
 
 export default function ForgotPassword() {
   const defaultValues = {
