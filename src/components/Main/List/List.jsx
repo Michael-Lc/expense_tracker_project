@@ -7,7 +7,7 @@ import './styles.css'
 
 export default function List() {
   const { transactions, deleteTransaction } = useTransaction()
-  console.log(transactions)
+  // console.log(transactions)
 
   return (
     <ListGroup variant="flush" className='transactions_list'>

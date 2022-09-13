@@ -1,21 +1,36 @@
 import React, { useState } from 'react'
-// import { Link } from 'react-router-dom'
-import { Alert, Button, Card, Container, Form } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+import { Alert, Card, Container, Form } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
+
+import SubmitButton from '../components/custom-buttons/SubmitButton'
+import { useAuth } from '../contexts/AuthContext'
 
 export default function ForgotPassword() {
   const defaultValues = {
     email: '',
   }
+  const { resetPassword } = useAuth()
   const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState("")
   const { register, formState: { errors }, handleSubmit } = useForm({
     defaultValues,
     mode: 'all',
     // resolver: yupResolver(signUpSchema),
   });
 
-  function onSubmit(data, e) {
-    console.log(data)
+  async function onSubmit(data, e) {
+    try {
+      setLoading(true)
+      setMessage("")
+      const res = await resetPassword(data)
+      setLoading(false)
+      setMessage('Please check your email for further instructions')
+      console.log(res)
+    } catch(err) {
+      setLoading(false)
+      console.log(err)
+    }
   }
 
   const onError = (errors, e) => console.log(errors, e);
@@ -30,14 +45,19 @@ export default function ForgotPassword() {
           <Card.Body>
             <h2 className="font-weight-normal text-center mb-4">Reset Password</h2>
             <Form role='form' method='post' onSubmit={handleSubmit(onSubmit, onError)}>
-              {/* {error && <Alert variant='danger'>{error}</Alert>} */}
+              {message && <Alert variant='success'>{message}</Alert>}
               <Form.Group className='my-2' id="email">
                 {errors.email && <Alert variant='danger'>{errors.email.message}</Alert>}
                 <Form.Label>Email</Form.Label>
                 <Form.Control type="email" {...register('email')}  required />
               </Form.Group>
 
-              <Button disabled={loading} className='w-100 my-3 rounded'>Sign In</Button>
+              <SubmitButton loading={loading} className='w-100 my-3'>
+                Reset password
+              </SubmitButton>
+              <div className="w-100 text-center mt-3">
+                <Link to='/signin'>Sign in</Link>
+              </div>
             </Form>
           </Card.Body>
         </Card>

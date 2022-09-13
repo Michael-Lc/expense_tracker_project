@@ -1,22 +1,22 @@
 import { useEffect, useRef } from 'react';
 import { ErrorPanel, PushToTalkButton, PushToTalkButtonContainer } from '@speechly/react-ui';
-import { SpeechState, useSpeechContext } from '@speechly/react-client'
+import { useSpeechContext } from '@speechly/react-client'
 import { Col, Container, Row } from 'react-bootstrap'
 
 import Details from "../components/Details/Details";
 import Main from '../components/Main/Main';
 
 export default function Home() {
-  const { speechState } = useSpeechContext()
+  const { listening } = useSpeechContext()
   const main = useRef(null)
 
   const executeScroll = () => main.current.scrollIntoView();
 
   useEffect(() => {
-    if(speechState === SpeechState.recording) {
+    if(listening) {
       executeScroll()
     }
-  }, [speechState])
+  }, [listening])
 
   return (
     <Container className='home' fluid style={{ height: '90vh' }}>

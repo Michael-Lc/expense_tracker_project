@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
-import { auth, firestore } from '../firebase'
+import { auth } from '../firebase'
 
 const AuthContext = createContext()
 
@@ -16,12 +16,9 @@ export function AuthProvider({ children }) {
   async function signup(body) {
     try {
       const user = await auth.createUserWithEmailAndPassword(body.email, body.password)
-      const newUser = firestore.collection("users").doc(user.user.uid);
       try {
-        await newUser.set({
-          id: user.user.uid,
-          name: body.name,
-          email: body.email,
+        await user.user.updateProfile({
+          displayName: body.name,
         })
         return true
       } catch (err) {
@@ -34,8 +31,65 @@ export function AuthProvider({ children }) {
     } 
   }
 
+  async function signin(body) {
+    try {
+      const user = await auth.signInWithEmailAndPassword(body.email, body.password)
+      console.log(user)
+      setCurrentUser(user)
+      return true
+    } catch (err) {
+      console.log(err.message)
+      return false
+    } 
+  }
+
+  async function resetPassword(data) {
+    try {
+      await auth.sendPasswordResetEmail(data.email)
+      return true
+    } catch (err) {
+      console.log(err.message)
+      return false
+    } 
+  }
+
+  async function updateAccount(data) {
+    const promises = []
+    if(data.password !== '') {
+      promises.push(currentUser.updatePassword(data.password))
+    }
+
+    if(data.name !== currentUser.displayName) {
+      promises.push(currentUser.updateProfile({ displayName: data.name })) 
+    }
+
+    if(data.email !== currentUser.email) {
+      promises.push(currentUser.updateEmail(data.email)) 
+    }
+
+    try {
+      const res = await Promise.all(promises)
+      console.log(res)
+      return true
+    } catch (err) {
+      console.log(err)
+      return false
+    } 
+  }
+
+  async function logout() {
+    try {
+      await auth.signOut()
+      return true
+    } catch(err) {
+      console.log(err)
+      return false
+    }
+  }
+
   useEffect(() => {
     const unSubscribe = auth.onAuthStateChanged(user => {
+      setInitialLoading(false)
       setCurrentUser(user)
     })
     return unSubscribe
@@ -43,29 +97,12 @@ export function AuthProvider({ children }) {
 
   const value = {
     currentUser,
-    signup
+    signup,
+    signin,
+    logout,
+    resetPassword,
+    updateAccount,
   }
-
-  useEffect(() => {
-    const user = localStorage.getItem('user')
-    if(user) {
-      const userData = JSON.parse(user)
-      // handleSetUser(userData)
-      // setUser({ ...userData, isValidated: true })
-      // localStorage.removeItem('user')
-    }
-    if(!user) {
-      const tempUser = {
-        "user_id": "d36f3737-7304-4756-82b2-1a0bf95580a3",
-        "name": "John",
-        "email": "johndoe565@gmail.com",
-        "date_joined": "Mon, 13 Jun 2022 19:06:04 GMT"
-      }
-
-      // handleSetUser(tempUser)
-    }
-    setInitialLoading(false)
-  }, [])
 
   return (
     <AuthContext.Provider value={value}>

@@ -1,13 +1,17 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Alert, Button, Card, Container, Form } from 'react-bootstrap'
+import { Link, useNavigate } from 'react-router-dom'
+import { Alert, Card, Container, Form } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
+import { useAuth } from '../contexts/AuthContext'
+import SubmitButton from '../components/custom-buttons/SubmitButton'
 
 export default function SignIn() {
   const defaultValues = {
     email: '',
     password: '',
   }
+  const navigate = useNavigate()
+  const { signin } = useAuth()
   const [loading, setLoading] = useState(false)
   const { register, formState: { errors }, handleSubmit } = useForm({
     defaultValues,
@@ -15,8 +19,18 @@ export default function SignIn() {
     // resolver: yupResolver(signUpSchema),
   });
 
-  function onSubmit(data, e) {
-    console.log(data)
+  async function onSubmit(data, e) {
+
+    try {
+      setLoading(true)
+      const res = await signin(data)
+      setLoading(false)
+      navigate('/')
+      console.log(res)
+    } catch(err) {
+      setLoading(false)
+      console.log(err)
+    }
   }
 
   const onError = (errors, e) => console.log(errors, e);
@@ -44,8 +58,13 @@ export default function SignIn() {
                 <Form.Control type="password" {...register('password')}  required />
               </Form.Group>
 
-              <Button disabled={loading} className='w-100 my-3 rounded'>Sign In</Button>
+              <SubmitButton loading={loading} className='w-100 my-3'>
+                Sign In
+              </SubmitButton>
             </Form>
+            <div className="w-100 text-center mt-3">
+              <Link to='/forgot-password'>Forgot password? </Link>
+            </div>
           </Card.Body>
         </Card>
         <div className="w-100 text-center mt-2">
