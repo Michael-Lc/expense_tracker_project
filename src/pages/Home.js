@@ -19,8 +19,8 @@ export default function Home() {
   }, [listening])
 
   return (
-    <Container className='home' fluid style={{ height: '90vh' }}>
-      <Row className='m-0 h-100 justify-content-center align-items-center'>
+    <Container className='home' fluid style={{ height: '100vh' }}>
+      <Row className='m-0 h-75 justify-content-center align-items-center'>
         <Col sm='4' xl='3' className='my-3'>
           <Details title='income' />
         </Col>

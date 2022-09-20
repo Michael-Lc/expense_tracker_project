@@ -6,6 +6,7 @@ import { useTransaction } from '../../contexts/TransactionContext'
 import MainForm from './Form/Form'
 import InfoCard from '../InfoCard'
 import List from './List/List'
+import User from '../User'
 
 export default function Main() {
   const { balance } = useTransaction()
@@ -13,8 +14,15 @@ export default function Main() {
   return (
     <Card className="root">
       <Card.Header>
-        <h4>Expense Tracker</h4>
-        <h5 className='fw-normal'>Powered by Speechly</h5>
+        <Row className='m-0'>
+          <Col xs='10'>
+            <h4>Expense Tracker</h4>
+            <h5 className='fw-normal'>Powered by Speechly</h5>
+          </Col>
+          <Col xs='2'>
+            <User />
+          </Col>
+        </Row>
       </Card.Header>
       <Card.Body>
         <h5 className='text-center'>Total Balance ${balance}</h5>
