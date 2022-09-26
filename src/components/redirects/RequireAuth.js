@@ -7,7 +7,7 @@ export default function RequireAuth() {
   const { currentUser } = useAuth()
 
   if(!currentUser) {
-    <Navigate to='/signin' />
+    return <Navigate to='/signin' />
   }
 
   return (

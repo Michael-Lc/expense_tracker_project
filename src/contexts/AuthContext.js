@@ -34,8 +34,8 @@ export function AuthProvider({ children }) {
   async function signin(body) {
     try {
       const user = await auth.signInWithEmailAndPassword(body.email, body.password)
-      console.log(user)
-      setCurrentUser(user)
+      // console.log(user)
+      setCurrentUser(user.user)
       return true
     } catch (err) {
       console.log(err.message)
@@ -89,8 +89,8 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const unSubscribe = auth.onAuthStateChanged(user => {
-      setInitialLoading(false)
       setCurrentUser(user)
+      setInitialLoading(false)
     })
     return unSubscribe
   }, [])

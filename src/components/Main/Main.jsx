@@ -15,11 +15,11 @@ export default function Main() {
     <Card className="root">
       <Card.Header>
         <Row className='m-0'>
-          <Col xs='10'>
+          <Col xs='9'>
             <h4>Expense Tracker</h4>
             <h5 className='fw-normal'>Powered by Speechly</h5>
           </Col>
-          <Col xs='2'>
+          <Col xs='3'>
             <User />
           </Col>
         </Row>

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Col, Form, Row } from 'react-bootstrap'
+import { Col, Form, Row } from 'react-bootstrap'
 import { useSpeechContext } from '@speechly/react-client'
 import { useForm } from 'react-hook-form'
 
 import { categories } from '../../../constants/categories'
 import { useTransaction } from '../../../contexts/TransactionContext'
 import { formatDate } from '../../../utils/utils'
+import SubmitButton from '../../custom-buttons/SubmitButton'
 
 export default function MainForm() {
   const defaultValues = {
@@ -20,12 +21,21 @@ export default function MainForm() {
   const selectedCategories = categories[type]
   const { addTransaction } = useTransaction()
   const { segment } = useSpeechContext()
+  const [loading, setLoading] = useState(false)
   // console.log(formData)
 
-  function onSubmit(formData) {
+  async function onSubmit(formData) {
     if(Number.isNaN(Number(formData.amount)) || !formData.date.includes("-")) return
-    addTransaction(formData)
-    reset(defaultValues)
+
+    try {
+      setLoading(true)
+      await addTransaction(formData)
+      setLoading(false)
+      reset(defaultValues)
+    } catch(err) {
+      setLoading(false)
+      console.log(err)
+    }
   }
 
   useEffect(() => {
@@ -119,7 +129,10 @@ export default function MainForm() {
 
         <Col xs='12'>
           <Form.Group className='mt-2'>
-            <Button type='submit' variant='light' className='border border-secondary w-100'>Create</Button>
+            {/* <Button type='submit' variant='light' className='border border-secondary w-100'>Create</Button> */}
+            <SubmitButton variant='secondary' loading={loading} className='border border-secondary w-100'>
+              Create
+            </SubmitButton>
           </Form.Group>
         </Col>
       </Row>

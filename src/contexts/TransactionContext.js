@@ -1,5 +1,7 @@
-import { createContext, useContext, useState } from "react";
-import { v4 as uuidv4 } from 'uuid'
+import { createContext, useContext, useEffect, useState } from "react";
+
+import { firestore, timestamp } from "../firebase";
+import { useAuth } from "./AuthContext";
 
 const TransactionContext = createContext([])
 
@@ -9,19 +11,59 @@ export function useTransaction() {
 
 export function TransactionProvider({ children }) {
   const [transactions, setTransactions] = useState([])
+  const { currentUser } = useAuth()
 
   const balance = transactions.reduce((acc, curr) => {
     return (curr.type === 'expense' ? acc - (parseFloat(curr.amount) || 0) : acc + (parseFloat(curr.amount) || 0))
   }, 0)
 
-  function addTransaction(transaction) {
-    setTransactions([ { id: uuidv4(), ...transaction }, ...transactions ])
+  async function addTransaction(transaction) {
+    const newPost = firestore.collection("transactions").doc();
+    transaction.id = newPost.id;
+    transaction.user_id = currentUser.uid
+    transaction.date_created = timestamp.now()
+
+    try {
+      await newPost.set(transaction)
+      setTransactions([ { ...transaction }, ...transactions ])
+      return true
+    } catch(err) {
+      console.log(err)
+      return false
+    }
   }
 
-  function deleteTransaction(id) {
-    const newData = transactions.filter(t => t.id !== id)
-    setTransactions([ ...newData ])
+  async function deleteTransaction(id) {
+    try {
+      await firestore.collection("transactions").doc(id).delete()
+      const newData = transactions.filter(t => t.id !== id)
+      setTransactions([ ...newData ])
+      return true
+    } catch(err) {
+      console.log(err)
+      return false
+    }
   }
+
+  async function getAllTransactions(id) {
+    try {
+      const docs = await firestore.collection("transactions").orderBy('date_created', 'desc').get()
+      if(!docs.empty) {
+        docs.forEach(doc => console.log(doc.data()))
+      }
+      // const newData = transactions.filter(t => t.id !== id)
+      // setTransactions([ ...newData ])
+      return true
+    } catch(err) {
+      console.log(err)
+      return false
+    }
+  }
+
+  useEffect(() => {
+    getAllTransactions()
+  }, [])
+  
 
   const value = {
     transactions,

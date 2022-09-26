@@ -7,7 +7,7 @@ export default function RequireValidation() {
   const { currentUser } = useAuth()
 
   if(currentUser) {
-    <Navigate to='/' />
+    return <Navigate to='/' />
   }
 
   return (
