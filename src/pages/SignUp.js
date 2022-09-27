@@ -31,8 +31,8 @@ export default function SignUp() {
       setLoading(true)
       const res = await signup(data)
       setLoading(false)
-      navigate('/')
       console.log(res)
+      navigate('/')
     } catch(err) {
       setLoading(false)
       console.log(err)

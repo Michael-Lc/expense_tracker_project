@@ -1,0 +1,22 @@
+.notifications-container {
+    position: fixed;
+    top: 10px;
+    right: 0;
+    z-index: 1030;
+}
+
+.bg-regular .toast-header {
+    color: white;
+    background-color: #1A374D;
+    border-bottom: #1A374D;
+}
+
+.bg-regular .toast-body {
+    color: white;
+    background-color: #488fb1;
+}
+
+body.modal-open {
+    overflow-y: auto !important;
+    padding: 0 !important;
+}

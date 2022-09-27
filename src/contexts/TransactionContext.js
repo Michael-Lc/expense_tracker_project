@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 import { firestore, timestamp } from "../firebase";
 import { useAuth } from "./AuthContext";
+import { useNotification } from "./NotificationContext";
 
 const TransactionContext = createContext([])
 
@@ -11,7 +12,9 @@ export function useTransaction() {
 
 export function TransactionProvider({ children }) {
   const [transactions, setTransactions] = useState([])
+  const [loading, setLoading] = useState(true)
   const { currentUser } = useAuth()
+  const { showNotification } = useNotification()
 
   const balance = transactions.reduce((acc, curr) => {
     return (curr.type === 'expense' ? acc - (parseFloat(curr.amount) || 0) : acc + (parseFloat(curr.amount) || 0))
@@ -26,6 +29,7 @@ export function TransactionProvider({ children }) {
     try {
       await newPost.set(transaction)
       setTransactions([ { ...transaction }, ...transactions ])
+      showNotification('success', 'Successfully created')
       return true
     } catch(err) {
       console.log(err)
@@ -38,6 +42,7 @@ export function TransactionProvider({ children }) {
       await firestore.collection("transactions").doc(id).delete()
       const newData = transactions.filter(t => t.id !== id)
       setTransactions([ ...newData ])
+      showNotification('success', 'Successfully deleted')
       return true
     } catch(err) {
       console.log(err)
@@ -47,22 +52,26 @@ export function TransactionProvider({ children }) {
 
   async function getAllTransactions(id) {
     try {
-      const docs = await firestore.collection("transactions").orderBy('date_created', 'desc').get()
+      const docs = await firestore.collection("transactions").where("user_id", "==", currentUser.uid).orderBy('date_created', 'desc').get()
       if(!docs.empty) {
-        docs.forEach(doc => console.log(doc.data()))
+        const docData = []
+        docs.forEach(doc => docData.push(doc.data()))
+        setTransactions([...docData])
       }
-      // const newData = transactions.filter(t => t.id !== id)
-      // setTransactions([ ...newData ])
+      setLoading(false)
       return true
     } catch(err) {
+      setLoading(false)
       console.log(err)
       return false
     }
   }
 
   useEffect(() => {
-    getAllTransactions()
-  }, [])
+    if(currentUser) {
+      getAllTransactions()
+    }
+  }, [currentUser])
   
 
   const value = {
@@ -74,7 +83,7 @@ export function TransactionProvider({ children }) {
 
   return (
     <TransactionContext.Provider value={value}>
-      {children}
+      {!loading && children}
     </TransactionContext.Provider>
   );
 }

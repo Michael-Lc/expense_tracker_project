@@ -23,13 +23,9 @@ export default function Notification({ type, message, id }) {
 
   return (
     <Toast bg={notificationType[type].class} show={show} onClose={onClose} delay={5000} autohide>
-      <Toast.Header>
-        <strong className='me-auto text-dark'>PrincipalBooks</strong>
-        <small>just now</small>
+      <Toast.Header className={`py-2 text-white bg-${notificationType[type].class}`}>
+        <strong className='me-auto'>{message}</strong>
       </Toast.Header>
-      <Toast.Body className='text-white'>
-        {message}
-      </Toast.Body>
     </Toast>
   )
 }

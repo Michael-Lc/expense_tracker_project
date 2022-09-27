@@ -1,5 +1,5 @@
-import React from 'react'
-import { Button, Col, Collapse, ListGroup } from 'react-bootstrap'
+import React, { useState } from 'react'
+import { Button, Col, Collapse, ListGroup, Spinner } from 'react-bootstrap'
 import { MdMoneyOffCsred, MdOutlineAttachMoney } from 'react-icons/md'
 import { AiTwotoneDelete } from 'react-icons/ai'
 
@@ -10,6 +10,18 @@ import './styles.css'
 export default function List() {
   const { transactions, deleteTransaction } = useTransaction()
   // console.log(transactions)
+  const [loading, setLoading] = useState()
+
+  async function onDelete(id) {
+    try {
+      setLoading(true)
+      await deleteTransaction(id)
+      setLoading(false)
+    } catch (err) {
+      setLoading(false)
+      console.log(err)
+    }
+  }
 
   return (
     <ListGroup variant="flush" className='transactions_list'>
@@ -28,8 +40,11 @@ export default function List() {
             </Col>
             <Col xs='2' className='d-flex align-items-center'>
               {/* Delete Button */}
-              <Button onClick={() => deleteTransaction(transaction.id)} className='fs-3' variant='light'>
-                <AiTwotoneDelete className='text-secondary' />
+              <Button onClick={() => onDelete(transaction.id)} disabled={loading} className='fs-3' variant='light'>
+                {loading ? 
+                  <Spinner size='sm' className='mx-2' animation='border' variant='secondary' /> :
+                  <AiTwotoneDelete className='text-secondary' />
+                }
               </Button>
             </Col>
           </ListGroup.Item>

@@ -25,8 +25,8 @@ export default function SignIn() {
       setLoading(true)
       const res = await signin(data)
       setLoading(false)
-      navigate('/')
       console.log(res)
+      navigate('/')
     } catch(err) {
       setLoading(false)
       console.log(err)

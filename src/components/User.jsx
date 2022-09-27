@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import { Dropdown } from 'react-bootstrap'
 import { HiUserCircle } from "react-icons/hi";
@@ -8,17 +8,17 @@ import { useAuth } from '../contexts/AuthContext';
 export default function User() {
   const { logout } = useAuth()
   const navigate = useNavigate()
-  const [loading, setLoading] = useState(false)
+  // const [loading, setLoading] = useState(false)
 
   async function onLogout() {
     try {
-      setLoading(true)
+      // setLoading(true)
       const res = await logout()
-      setLoading(false)
-      navigate('signin')
+      // setLoading(false)
+      navigate('/signin')
       console.log(res)
     } catch(err) {
-      setLoading(false)
+      // setLoading(false)
       console.log(err)
     }
   }

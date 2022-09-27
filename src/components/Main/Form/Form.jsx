@@ -15,7 +15,7 @@ export default function MainForm() {
     type: 'income',
     date: formatDate(new Date()),
   }
-  const { handleSubmit, register, formState: { error }, setValue, watch, reset } = useForm({ defaultValues })
+  const { handleSubmit, register, setValue, watch, reset } = useForm({ defaultValues })
   // const [formData, setFormData] = useState(defaultValues)
   const type = watch('type')
   const selectedCategories = categories[type]
