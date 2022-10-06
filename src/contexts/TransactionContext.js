@@ -58,7 +58,6 @@ export function TransactionProvider({ children }) {
         docs.forEach(doc => docData.push(doc.data()))
         setTransactions([...docData])
       }
-      setLoading(false)
       return true
     } catch(err) {
       setLoading(false)
@@ -70,6 +69,11 @@ export function TransactionProvider({ children }) {
   useEffect(() => {
     if(currentUser) {
       getAllTransactions()
+      .then(res => {
+        if(res) setLoading(false)
+      })
+    } else {
+      setLoading(false)
     }
   }, [currentUser])
   
