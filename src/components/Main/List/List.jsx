@@ -36,7 +36,7 @@ export default function List() {
             </Col>
             <Col xs='8'>
               <h5 className='text-capitalize'>{transaction.category}</h5> 
-              ${transaction.amount} - {transaction.date}
+              &#8373;{transaction.amount} - {transaction.date}
             </Col>
             <Col xs='2' className='d-flex align-items-center'>
               {/* Delete Button */}

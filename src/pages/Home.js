@@ -18,6 +18,7 @@ export default function Home() {
     }
   }, [listening])
 
+  // on smaller screen let form come first!!!!
   return (
     <Container className='home' fluid style={{ height: '100vh' }}>
       <Row className='m-0 h-75 justify-content-center align-items-center'>

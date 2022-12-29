@@ -25,7 +25,7 @@ export default function Main() {
         </Row>
       </Card.Header>
       <Card.Body>
-        <h5 className='text-center'>Total Balance ${balance}</h5>
+        <h5 className='text-center'>Total Balance &#8373;{balance}</h5>
         <InfoCard />
         <hr className='my-2' />
         <MainForm />

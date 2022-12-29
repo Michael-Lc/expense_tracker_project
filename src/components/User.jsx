@@ -23,6 +23,10 @@ export default function User() {
     }
   }
 
+  function onExport() {
+    navigate('/exports')
+  }
+
   return (
     <Dropdown align='end'>
       <Dropdown.Toggle variant='light'>
@@ -30,6 +34,7 @@ export default function User() {
       </Dropdown.Toggle>
 
       <Dropdown.Menu>
+        <Dropdown.Item onClick={onExport}>Export</Dropdown.Item>
         <Dropdown.Item onClick={onLogout}>Logout</Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>

@@ -8,6 +8,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import AccountSettings from "./pages/AccountSettings";
 import RequireAuth from "./components/redirects/RequireAuth";
 import RequireValidation from "./components/redirects/RequireValidation";
+import Export from "./pages/Export";
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
         <Routes>
           <Route element={<RequireAuth />}>
             <Route path='/' element={<Home />} />
+            <Route path='/exports' element={<Export />} />
             <Route path='/account-settings' element={<AccountSettings />} />
           </Route>
 

@@ -12,9 +12,9 @@ export default function Details({ title }) {
 
   return (
     <Card className={`${title}`}>
-      <Card.Header className='text-capitalize'>{title}</Card.Header>
+      <Card.Header className='text-capitalize fs-4'>{title}</Card.Header>
       <Card.Body>
-        <h5>${total}</h5>
+        <h5>&#8373;{total}</h5>
         <Doughnut data={chartData} />
       </Card.Body>
     </Card>
