@@ -2,15 +2,19 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Card, Col, Container, ListGroup, Row } from 'react-bootstrap'
 import { GiMoneyStack, GiPayMoney, GiReceiveMoney } from "react-icons/gi";
+import { utils, writeFile } from 'xlsx'
+
+import { useTransaction } from '../contexts/TransactionContext';
 
 export default function Export() {
   const navigate = useNavigate()
   const [active, setActive] = useState({
-    All: false,
+    All: true,
     Income: false,
     Expense: false,
   })
-  const [canExport, setCanExport] = useState(false)
+  const [canExport, setCanExport] = useState(true)
+  const { transactions } = useTransaction()
 
   function handleSetActive(type) {
     const newState = {}
@@ -18,6 +22,37 @@ export default function Export() {
     newState[type] = true
     setActive({ ...newState })
     setCanExport(true)
+  }
+  console.log(transactions)
+
+  function getDataToExport(data) {
+    return data.map(t => ({
+      Type: t.type,
+      Category: t.category,
+      Amount: t.amount,
+      Date: t.date,
+    }))
+  }
+
+  function handleExport() {
+    let dataToExport = []
+    if(active.All) {
+      dataToExport = getDataToExport(transactions)
+    } else if(active.Expense) {
+      dataToExport = getDataToExport(transactions.filter(t => t.type === 'expense'))
+    } else if(active.Income) {
+      dataToExport = getDataToExport(transactions.filter(t => t.type === 'income'))
+    } else {
+      return
+    }
+
+    const ws = utils.json_to_sheet(dataToExport, {
+      header: ['Type', 'Category', 'Amount', 'Date']
+    })
+    const wb = utils.book_new()
+    utils.book_append_sheet(wb, ws, "Data");
+    console.log(wb)
+    writeFile(wb, 'transactions.xlsx')
   }
 
   return (
@@ -50,7 +85,7 @@ export default function Export() {
                 </ListGroup.Item>
               </ListGroup>
 
-              <Button variant='success' className='w-100 my-2' disabled={!canExport}>
+              <Button variant='success' className='w-100 my-2' onClick={handleExport} disabled={!canExport}>
                 Export
               </Button>
               <Button variant='light' className='w-100 border border-secondary' onClick={() => navigate('/')}>

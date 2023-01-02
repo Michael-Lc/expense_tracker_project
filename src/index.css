@@ -38,3 +38,22 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance:textfield;
 }
+
+.mobile {
+  display: block;
+}
+
+.desktop {
+  display: none;
+}
+
+@media screen and (max-width: 480px) {
+
+.mobile {
+  display: none;
+}
+
+.desktop {
+  display: block;
+}
+}

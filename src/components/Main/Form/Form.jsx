@@ -42,47 +42,47 @@ export default function MainForm() {
     setValue('category', selectedCategories[0].type)
   }, [type])
 
-  // useEffect(() => {
-  //   if(segment) {
-  //     if(segment.intent.intent === 'add_expense') {
-  //       setValue('type', 'expense')
-  //     } else if(segment.intent.intent === 'add_income') {
-  //       setValue('type', 'income')
-  //     } else if(segment.isFinal && segment.intent.intent === 'create_transaction') {
-  //       return onSubmit()
-  //     } else if(segment.isFinal && segment.intent.intent === 'cancel_transaction') {
-  //       return reset(defaultValues)
-  //     }
+  useEffect(() => {
+    if(segment) {
+      if(segment.intent.intent === 'add_expense') {
+        setValue('type', 'expense')
+      } else if(segment.intent.intent === 'add_income') {
+        setValue('type', 'income')
+      } else if(segment.isFinal && segment.intent.intent === 'create_transaction') {
+        return onSubmit()
+      } else if(segment.isFinal && segment.intent.intent === 'cancel_transaction') {
+        return reset(defaultValues)
+      }
 
-  //     segment.entities.forEach((e) => {
-  //       const category = `${e.value.charAt(0)}${e.value.slice(1).toLowerCase()}`
-  //       switch(e.type) {
-  //         case 'amount':
-  //           setValue('amount', e.value)
-  //           break
-  //         case 'category':
-  //           if(categories.income.map((ic) => ic.type).includes(category)) {
-  //             setValue('type', 'income')
-  //             setValue('category', category)
-  //           } else if(categories.expense.map((ec) => ec.type).includes(category)) {
-  //             setValue('type', 'expense')
-  //             setValue('category', category)
-  //           }
-  //           break
-  //         case 'date':
-  //           setValue('date', e.value)
-  //           break
-  //         default:
-  //           break
-  //       }
-  //     })
+      segment.entities.forEach((e) => {
+        const category = `${e.value.charAt(0)}${e.value.slice(1).toLowerCase()}`
+        switch(e.type) {
+          case 'amount':
+            setValue('amount', e.value)
+            break
+          case 'category':
+            if(categories.income.map((ic) => ic.type).includes(category)) {
+              setValue('type', 'income')
+              setValue('category', category)
+            } else if(categories.expense.map((ec) => ec.type).includes(category)) {
+              setValue('type', 'expense')
+              setValue('category', category)
+            }
+            break
+          case 'date':
+            setValue('date', e.value)
+            break
+          default:
+            break
+        }
+      })
 
-  //     const formData = watch()
-  //     if(segment.isFinal && Object.keys(formData).every(k => formData[k])) {
-  //       onSubmit()
-  //     }
-  //   }
-  // }, [segment])
+      const formData = watch()
+      if(segment.isFinal && Object.keys(formData).every(k => formData[k])) {
+        onSubmit(formData)
+      }
+    }
+  }, [segment])
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
@@ -122,7 +122,7 @@ export default function MainForm() {
         <Col xs='6'>
           <Form.Group className='mt-2'>
             <Form.Label>Date</Form.Label>
-            <Form.Control {...register('date', { required: true })} type='date' />
+            <Form.Control {...register('date')} type='date' />
           </Form.Group>
         </Col>
 

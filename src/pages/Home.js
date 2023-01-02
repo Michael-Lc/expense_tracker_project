@@ -22,11 +22,14 @@ export default function Home() {
   return (
     <Container className='home' fluid style={{ height: '100vh' }}>
       <Row className='m-0 h-75 justify-content-center align-items-center'>
-        <Col sm='4' xl='3' className='my-3'>
+        <Col sm='4' xl='3' className='my-3 mobile'>
           <Details title='income' />
         </Col>
         <Col sm='4' xl='3' className='my-3' ref={main}>
           <Main />
+        </Col>
+        <Col sm='4' xl='3' className='my-3 desktop'>
+          <Details title='income' />
         </Col>
         <Col sm='4' xl='3' className='my-3'>
           <Details title='expense' />
